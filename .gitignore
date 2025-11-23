@@ -1,28 +1,24 @@
-# Gradle
 .gradle/
 build/
 out/
 classes/
-
-# IntelliJ
+local.properties
 .idea/
 *.iml
 *.ipr
 *.iws
-
-# Eclipse
 .classpath
 .project
 .settings/
-
-# Fabric
+bin/
 run/
 logs/
-
-# OS
+*.log
+.vscode/
 .DS_Store
 Thumbs.db
-
-# Minecraft
 *.jar
 !gradle/wrapper/gradle-wrapper.jar
+*.tmp
+*.bak
+*.swp
