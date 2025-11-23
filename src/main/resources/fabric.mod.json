@@ -3,11 +3,11 @@
   "id": "main",
   "version": "${version}",
   "name": "PearlTrajectories",
-  "description": "Ender pearl trajectory visualization mod",
+  "description": "ender pearl trajectory visualization mod",
   "authors": ["szok"],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/main/icon.png",
+  "icon": "assets/icon/icon.png",
 
   "environment": "client",
 

@@ -33,11 +33,11 @@ public class MainClient implements ClientModInitializer {
     private static final long LANDING_EFFECT_DURATION = 3000L;
     private static final long TRAIL_PERSIST_TIME = 2000L;
     private static final int CYLINDER_SEGMENTS = 16;
-    private static final float CYLINDER_RADIUS = 0.12F;
+    private static final float CYLINDER_RADIUS = 0.05F;
     private static final double MIN_DISTANCE_THRESHOLD = 0.02D;
 
     public void onInitializeClient() {
-        System.out.println("[Trajectories] Initializing");
+        System.out.println("[Pearl Trajectories] Initializing :v");
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.world == null || client.player == null)
                 return;
@@ -50,19 +50,17 @@ public class MainClient implements ClientModInitializer {
                     EnderPearlEntity.class, searchBox, entity -> true);
             long currentTime = System.currentTimeMillis();
 
-            // Cleanup removed pearls & detect landings
             for (EnderPearlEntity pearl : PEARL_TRAILS.keySet()) {
                 if ((pearl.isRemoved() || !pearls.contains(pearl))
                         && !PEARL_REMOVAL_TIME.containsKey(pearl)) {
                     PEARL_REMOVAL_TIME.put(pearl, currentTime);
 
-                    // LANDING EFFECT tylko dla pereł innych graczy
                     if (!isOwnedByPlayer(pearl, client)) {
                         Vec3d landingPos = PEARL_LAST_POS.get(pearl);
                         if (landingPos != null) {
                             LANDING_EFFECTS.put(landingPos, currentTime);
 
-                            // Spawn particles
+
                             for (int i = 0; i < 30; i++) {
                                 client.world.addParticle(
                                         ParticleTypes.PORTAL,
@@ -91,12 +89,10 @@ public class MainClient implements ClientModInitializer {
             LANDING_EFFECTS.entrySet().removeIf(entry ->
                     currentTime - entry.getValue() > LANDING_EFFECT_DURATION);
 
-            // Track pearl positions - SKIP jeśli to Twoja perła
             for (EnderPearlEntity pearl : pearls) {
                 if (!pearl.isRemoved()) {
-                    // FILTR: Ignoruj perły rzucone przez Ciebie
                     if (isOwnedByPlayer(pearl, client)) {
-                        continue;  // Skip tej perły
+                        continue;
                     }
 
                     Vec3d currentPos = pearl.getPos();
@@ -123,11 +119,10 @@ public class MainClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(this::renderTrajectories);
     }
 
-    // Helper method - sprawdza czy perła należy do gracza
+
     private boolean isOwnedByPlayer(EnderPearlEntity pearl, MinecraftClient client) {
         if (client.player == null) return false;
 
-        // Sprawdź czy owner perły to klient
         var owner = pearl.getOwner();
         return owner != null && owner.getUuid().equals(client.player.getUuid());
     }
@@ -151,7 +146,6 @@ public class MainClient implements ClientModInitializer {
 
         matrices.push();
 
-        // Render trails (już tylko dla innych graczy)
         if (!PEARL_TRAILS.isEmpty()) {
             for (Map.Entry<EnderPearlEntity, List<Vec3d>> entry : PEARL_TRAILS.entrySet()) {
                 if (entry.getValue().size() >= 2) {
@@ -160,7 +154,7 @@ public class MainClient implements ClientModInitializer {
             }
         }
 
-        // Render landing effects
+
         if (!LANDING_EFFECTS.isEmpty()) {
             long currentTime = System.currentTimeMillis();
             for (Map.Entry<Vec3d, Long> entry : LANDING_EFFECTS.entrySet()) {
@@ -202,15 +196,12 @@ public class MainClient implements ClientModInitializer {
             int blue = (int)(b * 255);
             int alpha = (int)(220 * (1.0F - progress * 0.3F));
 
-            // OUTER GLOW
             renderCylinderSegment(start, end, matrices, vertexConsumer,
                     red/3, green/3, blue/2, alpha/4, CYLINDER_RADIUS * 2.0F);
 
-            // MAIN TUBE
             renderCylinderSegment(start, end, matrices, vertexConsumer,
                     red, green, blue, alpha, CYLINDER_RADIUS);
 
-            // INNER CORE
             renderCylinderSegment(start, end, matrices, vertexConsumer,
                     255, 255, 255, alpha/2, CYLINDER_RADIUS * 0.3F);
         }
@@ -235,7 +226,7 @@ public class MainClient implements ClientModInitializer {
         Vec3d beamStart = relativePos;
         Vec3d beamEnd = new Vec3d(relativePos.x, 255 - cameraPos.y, relativePos.z);
 
-        float beamRadius = 0.3F;
+        float beamRadius = 0.1F;
         int segments = 8;
 
         for (int layer = 0; layer < 3; layer++) {
@@ -334,7 +325,7 @@ public class MainClient implements ClientModInitializer {
                                         int blue, int alpha) {
         Vec3d direction = end.subtract(start);
         Vec3d perpendicular = new Vec3d(-direction.z, 0, direction.x).normalize();
-        float width = 0.08F;
+        float width = 0.04F;
 
         Vec3d offset = perpendicular.multiply(width);
         Vector3f normal = new Vector3f(0, 1, 0);
