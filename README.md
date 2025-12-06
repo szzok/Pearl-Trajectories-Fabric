@@ -1,5 +1,8 @@
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/llnOBqnk?logo=modrinth&label=downloads&color=00AF5C)](https://modrinth.com/mod/llnOBqnk)
 ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1398411?logo=curseforge&label=downloads&color=F16436)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21+-green?logo=minecraft)
+![Fabric](https://img.shields.io/badge/Fabric-Mod-orange)
+![Client](https://img.shields.io/badge/Side-Client-blue)
 
 
 
